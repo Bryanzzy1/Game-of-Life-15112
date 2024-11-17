@@ -48,14 +48,15 @@ def onKeyPress(app, key):
         app.gameOfLife.clear()  # Clear the grid
 
 
+# Advance the game if not paused.
 def onStep(app):
-    """Advance the game if not paused."""
+
     if not app.paused:
         app.gameOfLife.step()
 
 
+# Redraw the entire screen.
 def redrawAll(app):
-    """Redraw the entire screen."""
     drawRect(0, 0, app.width, app.height, fill="black")  # Background
     drawGrid(app)
 
