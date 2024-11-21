@@ -142,6 +142,8 @@ def onKeyPress(app, key):
             moveGreenSquare(app, app.greenSquareX + 1, app.greenSquareY)
         elif key in ["up", "w"]:
             moveGreenSquare(app, app.greenSquareX, app.greenSquareY - 1)
+        elif key in ["down", "s"]:
+            moveGreenSquare(app, app.greenSquareX, app.greenSquareY + 1)
 
 
 def onStep(app):
