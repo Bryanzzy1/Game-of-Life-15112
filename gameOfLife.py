@@ -1,50 +1,55 @@
-# game_of_life.py
+# gameOfLife.py
 from cmu_graphics import *
 
 
 class GameOfLife:
-    def __init__(self, cell_size):
-        self.cell_size = cell_size
+    def __init__(self, cellSize):
+        self.cellSize = cellSize
         self.cells = {}
 
-    def toggle_cell(self, x, y):
+    # Adds cells if clicked and remove cells if there is already a cell
+    def toggleCell(self, x, y):
         if (x, y) in self.cells:
             del self.cells[(x, y)]
         else:
             self.cells[(x, y)] = True
 
+    # Draws the grid and the cells here instead of the main python for better debug
     def draw(self, app):
         for x, y in self.cells:
-            x_pos = app.offset_x + app.width // 2 + x * app.grid_size
-            y_pos = app.offset_y + app.height // 2 + y * app.grid_size
-            drawRect(x_pos, y_pos, app.grid_size, app.grid_size, fill="white")
+            xPos = app.offsetX + app.width // 2 + x * app.gridSize
+            yPos = app.offsetY + app.height // 2 + y * app.gridSize
+            drawRect(xPos, yPos, app.gridSize, app.gridSize, fill="white")
 
     def step(self):
-        new_cells = {}
-        neighbor_counts = {}
+        newCells = {}
+        neighborCounts = {}
 
-        # Step 1: Count neighbors for each live cell and their neighbors
+        # Count neighbors for each live cell and their neighbors
         for x, y in self.cells:
             for dx in [-1, 0, 1]:
                 for dy in [-1, 0, 1]:
                     if (dx, dy) != (0, 0):  # Skip the cell itself
-                        nx, ny = x + dx, y + dy
-                        neighbor_counts[(nx, ny)] = neighbor_counts.get((nx, ny), 0) + 1
+                        neighborX, neighborY = x + dx, y + dy
+                        neighborCounts[(neighborX, neighborY)] = (
+                            neighborCounts.get((neighborX, neighborY), 0) + 1
+                        )
 
-        # Step 2: Apply the rules of the Game of Life
-        for position, count in neighbor_counts.items():
+        # Apply the rules and logic of the Game of Life
+        for position, count in neighborCounts.items():
             if count == 3 or (count == 2 and position in self.cells):
-                new_cells[position] = True
+                newCells[position] = True
 
-        self.cells = new_cells
+        self.cells = newCells
 
-    def live_count(self):
+    # Get the total count of alive cells
+    def liveCount(self):
         return len(self.cells)
 
-    def get_cell(self, x, y):
-        # Returns True if the cell at (x, y) is alive (white), False otherwise
+    # Returns True if the cell at (x, y) is alive (white), False otherwise
+    def getCell(self, x, y):
         return self.cells.get((x, y), False)
 
+    # Clears all cells, effectively resetting the game state
     def reset(self):
-        # Clears all cells, effectively resetting the game state
         self.cells = {}
