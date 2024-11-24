@@ -1,4 +1,7 @@
 # gameOfLife.py
+# Some inspiration from:
+# -Code Noodle: https://www.youtube.com/watch?v=jGTCwCLRCrE
+# -The Coding Train: https://www.youtube.com/watch?v=FWSR_7kZuYg
 from cmu_graphics import *
 
 
