@@ -91,6 +91,8 @@ def checkCollision(app):
 # Resets the player's position
 def resetPlayerPosition(app):
     app.greenSquareX, app.greenSquareY = -1, -1  # Reset to starting position
+    app.newGreenSquareX, app.newGreenSquareY = -1, -1
+    app.offsetX, app.offsetY = 0, 0
     app.animationScale = 1
     app.animation = False
     app.backwardAnimation = False
