@@ -5,5 +5,6 @@ The project adds a difficulty system that adjusts the speed at which the cells e
 
 # Similar Projects
 **Conway's Game of Life (Web-based)**: A web version of Conway's Game of Life that provides a basic implementation with step-by-step evolution. Inspiration: The game's ability to adjust simulation speed and display future states can inform the difficulty system and visualizations in the current project.
+
 **Auto Cell: Game of Life (App)**:
 This app provides a visually appealing and intuitive simulation of Conway's Game of Life. This app introduces several interesting features such as randomized start state, 3d stack view and intuitive user interface. Inspiration: The interface’s fluid design and easy-to-navigate grid inspired the project’s user interface and movement mechanics, the randomized start state provided the inspiration to add a player square in a grid of randomized cells.
