@@ -67,7 +67,5 @@ class ButtonUI:
         buttonClicked = self.isClickOnButton(mouseX, mouseY)
         if buttonClicked == "pause":
             self.app.running = False
-            print("Game Paused")
         elif buttonClicked == "resume":
             self.app.running = True
-            print("Game Resumed")
