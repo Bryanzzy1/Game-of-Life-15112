@@ -8,6 +8,7 @@ from playerSquare import (
     checkCollision,
     moveGreenSquare,
 )
+from ButtonUI import ButtonUI  # Import the ButtonUI class
 
 # Colors
 borderColor = rgb(204, 221, 230)  # Light blue for the grid lines
@@ -63,6 +64,9 @@ def redrawAll(app):
     drawGrid(app)
     app.lifeSim.draw(app)
 
+    # Draw the UI buttons
+    app.buttonUI.drawButtons()
+
     if app.gameOver:
         drawGameOver(app)
     else:
@@ -117,6 +121,11 @@ def drawGameOver(app):
 
 # Handle on mouse press events
 def onMousePress(app, mouseX, mouseY):
+    # Check if the mouse click is within any button's boundaries
+    if app.buttonUI.isClickOnButton(mouseX, mouseY):
+        app.buttonUI.handleClick(mouseX, mouseY)
+        return  # Exit if a button is clicked
+
     if not app.userInputEnabled:
         return
 
@@ -177,6 +186,17 @@ def onAppStart(app):
     app.stepTimer = 0
     app.difficulty = 30
     app.borderReached = False
+
+    # Initialize the UI buttons with positions and sizes
+    app.buttonUI = ButtonUI(
+        app,
+        pauseX=20,
+        pauseY=20,
+        resumeX=20,
+        resumeY=60,
+        buttonWidth=80,
+        buttonHeight=30,
+    )
 
 
 runApp(width=600, height=600)
