@@ -177,6 +177,8 @@ def onAppStart(app):
     # I start with -1,-1 here because that is the cell that is most centered
     app.greenSquareX, app.greenSquareY = -1, -1
     app.newGreenSquareX, app.newGreenSquareY = -1, -1
+    app.boardLimitX = 10
+    app.boardLImitY = 10
 
     # Animation
     app.animation = False
