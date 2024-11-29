@@ -15,7 +15,7 @@ class GameOfLife:
         self.borderY = app.boardLimitY
 
         # Toggle for future prediction feature
-        self.futurePrediction = False
+        self.futurePrediction = app.futurePrediction
 
         # Initiate the randomized dictionary start
         self.randomize()
@@ -26,7 +26,7 @@ class GameOfLife:
         playerX, playerY = app.greenSquareX, app.greenSquareY
 
         # Add multiple random shapes to the grid
-        numberOfShapes = random.randint(80, 100)
+        numberOfShapes = random.randint(80, 120)
         placedShapes = []
 
         for _ in range(numberOfShapes):
@@ -59,14 +59,6 @@ class GameOfLife:
             -self.borderX <= x <= self.borderX - 1
             and -self.borderY <= y <= self.borderY - 1
         )
-
-    # Adds cells if clicked and removes cells if there is already a cell, only within the border
-    def toggleCell(self, x, y):
-        if self.isWithinBorder(x, y):  # Only toggle if within the border
-            if (x, y) in self.cells:
-                del self.cells[(x, y)]
-            else:
-                self.cells[(x, y)] = True
 
     # Toggle the future prediction feature on or off
     def togglePrediction(self):
@@ -129,12 +121,16 @@ class GameOfLife:
                     # Future empty cells (green)
                     xPos = app.offsetX + app.width // 2 + x * app.gridSize
                     yPos = app.offsetY + app.height // 2 + y * app.gridSize
-                    drawRect(xPos, yPos, app.gridSize, app.gridSize, fill="green")
+                    drawRect(
+                        xPos, yPos, app.gridSize, app.gridSize, fill="green", opacity=50
+                    )
                 elif (x, y) in newCells:
                     # Future alive cells (red)
                     xPos = app.offsetX + app.width // 2 + x * app.gridSize
                     yPos = app.offsetY + app.height // 2 + y * app.gridSize
-                    drawRect(xPos, yPos, app.gridSize, app.gridSize, fill="red")
+                    drawRect(
+                        xPos, yPos, app.gridSize, app.gridSize, fill="red", opacity=50
+                    )
 
     # Logic for the Game of Life mutations
     def step(self):
@@ -149,7 +145,3 @@ class GameOfLife:
     # Returns True if the cell at (x, y) is alive (white), False otherwise
     def getCell(self, x, y):
         return self.cells.get((x, y), False)
-
-    # Clears all cells, effectively resetting the game state
-    def reset(self):
-        self.randomize()

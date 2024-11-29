@@ -159,8 +159,8 @@ shapes = [
 def randomizeShape(shape, borderX, borderY):
     randomizedShape = {}
     # Randomly shift the shape within the given borders
-    offsetX = random.randint(-borderX + 1, borderX - 2)
-    offsetY = random.randint(-borderY + 1, borderY - 2)
+    offsetX = random.randint(-borderX, borderX)
+    offsetY = random.randint(-borderY, borderY)
 
     # Add shifted shape cells to the new grid position
     for (x, y), alive in shape.items():
