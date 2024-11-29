@@ -54,7 +54,7 @@ def keyPress(app, key):
 
 
 def moveGreenSquare(app, newX, newY):
-    # Define grid boundaries (adjust as needed)
+    # Define grid boundaries
     gridLimitX = app.boardLimitX
     gridLimitY = app.boardLimitY
 
