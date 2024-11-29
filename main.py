@@ -1,3 +1,6 @@
+# The main file to run the entire game
+# Press run file to play the game
+
 from cmu_graphics import *
 from gameOfLife import GameOfLife
 from playerSquare import (

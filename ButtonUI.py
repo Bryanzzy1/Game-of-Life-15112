@@ -1,6 +1,7 @@
 from cmu_graphics import *
 
 
+# The button UI class that handles button events
 class ButtonUI:
     def __init__(
         self, app, pauseX, pauseY, resumeX, resumeY, buttonWidth, buttonHeight

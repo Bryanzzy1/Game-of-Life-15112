@@ -1,4 +1,3 @@
-# gameOfLife.py
 # Some inspiration from:
 # -Code Noodle: https://www.youtube.com/watch?v=jGTCwCLRCrE
 # -The Coding Train: https://www.youtube.com/watch?v=FWSR_7kZuYg
@@ -22,7 +21,7 @@ class GameOfLife:
 
     def randomize(self):
         # Define a buffer zone distance around the player square to avoid placement
-        bufferZone = 3
+        bufferZone = 2
         playerX, playerY = app.greenSquareX, app.greenSquareY
 
         # Add multiple random shapes to the grid
@@ -70,9 +69,9 @@ class GameOfLife:
         for x, y in self.cells:
             for dx in [-1, 0, 1]:
                 for dy in [-1, 0, 1]:
-                    if (dx, dy) != (0, 0):  # Skip the cell itself
+                    if (dx, dy) != (0, 0):
                         neighborX, neighborY = x + dx, y + dy
-                        if self.isWithinBorder(neighborX, neighborY):  # Check border
+                        if self.isWithinBorder(neighborX, neighborY):
                             neighborCounts[(neighborX, neighborY)] = (
                                 neighborCounts.get((neighborX, neighborY), 0) + 1
                             )

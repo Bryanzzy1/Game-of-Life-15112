@@ -76,7 +76,7 @@ def moveGreenSquare(app, newX, newY):
             app.borderReached = False
 
 
-# "update" the camera by shifting the grid opposite to the player's movement
+# "Update" the camera by shifting the grid opposite to the player's movement
 def updateCamera(app):
     app.offsetX = (-app.greenSquareX - 1) * app.gridSize
     app.offsetY = (-app.greenSquareY - 1) * app.gridSize
@@ -85,14 +85,17 @@ def updateCamera(app):
 # Check if the player square is on a cell that is alive
 def checkCollision(app):
     if app.lifeSim.getCell(app.greenSquareX, app.greenSquareY):
-        app.gameOver = True  # Set game over status
+        app.gameOver = True
 
 
 # Resets the player's position
 def resetPlayerPosition(app):
-    app.greenSquareX, app.greenSquareY = -1, -1  # Reset to starting position
+    # Position
+    app.greenSquareX, app.greenSquareY = -1, -1
     app.newGreenSquareX, app.newGreenSquareY = -1, -1
     app.offsetX, app.offsetY = 0, 0
+
+    # Animation
     app.animationScale = 1
     app.animation = False
     app.backwardAnimation = False

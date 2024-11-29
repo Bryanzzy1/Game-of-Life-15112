@@ -1,8 +1,8 @@
-import random
-
 # Predefined shapes in Conway's Game of Life
 # I asked chatGPT to give me a few shapes that are well known and
 # would last for a while before the cells become a dead state.
+
+import random
 
 # Glider
 glider = {
