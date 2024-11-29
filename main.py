@@ -71,7 +71,7 @@ def drawBorder(app):
         bottom - top,
         fill=None,
         border="red",
-        borderWidth=3,
+        borderWidth=2,
     )
 
 
@@ -94,6 +94,15 @@ def redrawAll(app):
             fill="red",
             size=25,
         )
+
+        drawLabel(
+            f"Time Left: {app.countdownTimer}",
+            app.width // 2,
+            10,
+            fill="red",
+            size=25,
+        )
+
         # Display "border reached!" message if the player has reached the border
         if app.borderReached:
             drawLabel(
@@ -110,9 +119,10 @@ def redrawAll(app):
 def restartGame(app):
     app.gameOver = False
     app.running = False
+    app.countdownTimer = 100
     app.borderReached = False
     resetPlayerPosition(app)
-    app.lifeSim.reset()
+    app.lifeSim = GameOfLife(app.gridSize)
 
 
 # Draw the restart game labels
@@ -127,6 +137,7 @@ def drawGameOver(app):
         size=18,
         fill="white",
     )
+
     drawLabel(
         "Press 'R' to restart",
         app.width // 2,
@@ -138,17 +149,7 @@ def drawGameOver(app):
 
 # Handle on mouse press events
 def onMousePress(app, mouseX, mouseY):
-    # Check if the mouse click is within any button's boundaries
-    if app.buttonUI.isClickOnButton(mouseX, mouseY):
-        app.buttonUI.handleClick(mouseX, mouseY)
-        return  # Exit if a button is clicked
-
-    if not app.userInputEnabled:
-        return
-
-    gridX = (mouseX - app.offsetX - app.width // 2) // app.gridSize
-    gridY = (mouseY - app.offsetY - app.height // 2) // app.gridSize
-    app.lifeSim.toggleCell(gridX, gridY)
+    app.buttonUI.isClickOnButton(mouseX, mouseY)
 
 
 # Handles the logic for player movement and some UI
@@ -174,10 +175,16 @@ def onKeyPress(app, key):
 
 def onStep(app):
     checkCollision(app)
+
     if app.running:
         # Controls how fast the cells are mutating/difficulty control
         app.stepTimer += 1
         if app.stepTimer % app.difficulty == 0:
+            # Countdown timer
+            if not app.gameOver and app.countdownTimer > 0:
+                app.countdownTimer -= 1
+            else:
+                app.gameOver = True
             app.lifeSim.step()
 
     if app.animation:
@@ -185,10 +192,17 @@ def onStep(app):
 
 
 def onAppStart(app):
+    # Difficulty
+    app.difficulty = 20
+    app.futurePrediction = True
+    app.countdownTimer = 50
+
     # Board
     app.gridSize = 20
     app.boardLimitX = 20
     app.boardLimitY = 20
+    app.borderReached = False
+    app.lineThickness = 1.5
 
     # I start with -1,-1 here because that is the cell that is most centered
     app.greenSquareX, app.greenSquareY = -1, -1
@@ -197,9 +211,7 @@ def onAppStart(app):
     # Simulation
     app.lifeSim = GameOfLife(app.gridSize)
     app.offsetX, app.offsetY = 0, 0
-    app.userInputEnabled = True
     app.gameOver = False
-    app.lineThickness = 1.5
 
     # Animation
     app.animation = False
@@ -207,10 +219,6 @@ def onAppStart(app):
     app.animationScale = 1
     app.running = False
     app.stepTimer = 0
-    app.difficulty = 30
-    app.lifeSim.futurePrediction = True
-
-    app.borderReached = False
 
     # Initialize the UI buttons with positions and sizes
     app.buttonUI = ButtonUI(
