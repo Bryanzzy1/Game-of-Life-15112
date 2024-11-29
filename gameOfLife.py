@@ -3,15 +3,55 @@
 # -Code Noodle: https://www.youtube.com/watch?v=jGTCwCLRCrE
 # -The Coding Train: https://www.youtube.com/watch?v=FWSR_7kZuYg
 from cmu_graphics import *
+from shapes import shapes, randomizeShape
+import random
 
 
 class GameOfLife:
     def __init__(self, cellSize):
         self.cellSize = cellSize
         self.cells = {}
-        self.borderX = 10  # Default horizontal border limit
-        self.borderY = 10  # Default vertical border limit
-        self.futurePrediction = False  # Toggle for future prediction feature
+        self.borderX = app.boardLimitX
+        self.borderY = app.boardLimitY
+
+        # Toggle for future prediction feature
+        self.futurePrediction = False
+
+        # Initiate the randomized dictionary start
+        self.randomize()
+
+    def randomize(self):
+        # Define a buffer zone distance around the player square to avoid placement
+        bufferZone = 3
+        playerX, playerY = app.greenSquareX, app.greenSquareY
+
+        # Add multiple random shapes to the grid
+        numberOfShapes = random.randint(80, 100)
+        placedShapes = []
+
+        for _ in range(numberOfShapes):
+            placed = False
+            while not placed:
+                # Randomly choose a shape from the list
+                shape = random.choice(shapes)
+                randomizedShape = randomizeShape(shape, self.borderX, self.borderY)
+
+                # Check if the shape overlaps with any existing shape or is too close to the player square
+                overlap = False
+                for x, y in randomizedShape.keys():
+                    # Check if any cell of the new shape is within the player buffer zone or overlaps with another shape
+                    if (x, y) in self.cells or (
+                        abs(x - playerX) <= bufferZone
+                        and abs(y - playerY) <= bufferZone
+                    ):
+                        overlap = True
+                        break
+
+                # If no overlap, place the shape and add its cells to the grid
+                if not overlap:
+                    self.cells.update(randomizedShape)
+                    placedShapes.append(randomizedShape)
+                    placed = True
 
     # Check if a cell is within the border limits
     def isWithinBorder(self, x, y):
@@ -112,4 +152,4 @@ class GameOfLife:
 
     # Clears all cells, effectively resetting the game state
     def reset(self):
-        self.cells = {}
+        self.randomize()

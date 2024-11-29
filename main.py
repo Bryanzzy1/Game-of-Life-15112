@@ -187,19 +187,19 @@ def onStep(app):
 def onAppStart(app):
     # Board
     app.gridSize = 20
-    app.lifeSim = GameOfLife(app.gridSize)
-    app.boardLimitX = 10
-    app.boardLimitY = 10
-    app.lifeSim.borderX = app.boardLimitX
-    app.lifeSim.borderY = app.boardLimitY
-    app.offsetX, app.offsetY = 0, 0
-    app.userInputEnabled = True
-    app.gameOver = False
-    app.lineThickness = 1.5
+    app.boardLimitX = 20
+    app.boardLimitY = 20
 
     # I start with -1,-1 here because that is the cell that is most centered
     app.greenSquareX, app.greenSquareY = -1, -1
     app.newGreenSquareX, app.newGreenSquareY = -1, -1
+
+    # Simulation
+    app.lifeSim = GameOfLife(app.gridSize)
+    app.offsetX, app.offsetY = 0, 0
+    app.userInputEnabled = True
+    app.gameOver = False
+    app.lineThickness = 1.5
 
     # Animation
     app.animation = False
