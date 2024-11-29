@@ -15,12 +15,11 @@ borderColor = rgb(204, 221, 230)  # Light blue for the grid lines
 backgroundColor = rgb(58, 61, 66)  # Dark grey for the background
 
 # Constants for grid configuration
-gridSize = 20
+
 zoomFactor = 1.1
 minGridSize = 5
 maxGridSize = 100
 maxOffset = 10000
-app.lineThickness = 1.5
 
 
 def drawGrid(app):
@@ -111,6 +110,7 @@ def redrawAll(app):
 def restartGame(app):
     app.gameOver = False
     app.running = False
+    app.borderReached = False
     resetPlayerPosition(app)
     app.lifeSim.reset()
 
@@ -186,16 +186,20 @@ def onStep(app):
 
 def onAppStart(app):
     # Board
-    app.lifeSim = GameOfLife(gridSize)
-    app.gridSize = gridSize
+    app.gridSize = 20
+    app.lifeSim = GameOfLife(app.gridSize)
+    app.boardLimitX = 30
+    app.boardLimitY = 30
+    app.lifeSim.borderX = app.boardLimitX
+    app.lifeSim.borderY = app.boardLimitY
     app.offsetX, app.offsetY = 0, 0
     app.userInputEnabled = True
     app.gameOver = False
+    app.lineThickness = 1.5
+
     # I start with -1,-1 here because that is the cell that is most centered
     app.greenSquareX, app.greenSquareY = -1, -1
     app.newGreenSquareX, app.newGreenSquareY = -1, -1
-    app.boardLimitX = 10
-    app.boardLimitY = 10
 
     # Animation
     app.animation = False

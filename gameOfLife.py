@@ -9,21 +9,29 @@ class GameOfLife:
     def __init__(self, cellSize):
         self.cellSize = cellSize
         self.cells = {}
+        self.borderX = 10  # Default horizontal border limit
+        self.borderY = 10  # Default vertical border limit
 
-    # Adds cells if clicked and remove cells if there is already a cell
+    # Check if a cell is within the border limits
+    def isWithinBorder(self, x, y):
+        return -self.borderX <= x <= self.borderX and -self.borderY <= y <= self.borderY
+
+    # Adds cells if clicked and removes cells if there is already a cell, only within the border
     def toggleCell(self, x, y):
-        if (x, y) in self.cells:
-            del self.cells[(x, y)]
-        else:
-            self.cells[(x, y)] = True
+        if self.isWithinBorder(x, y):  # Only toggle if within the border
+            if (x, y) in self.cells:
+                del self.cells[(x, y)]
+            else:
+                self.cells[(x, y)] = True
 
-    # Draws the grid and the cells here instead of the main python for better debug
+    # Draws the grid and the cells
     def draw(self, app):
         for x, y in self.cells:
             xPos = app.offsetX + app.width // 2 + x * app.gridSize
             yPos = app.offsetY + app.height // 2 + y * app.gridSize
             drawRect(xPos, yPos, app.gridSize, app.gridSize, fill="white")
 
+    # Logic for the Game of Life mutations
     def step(self):
         newCells = {}
         neighborCounts = {}
@@ -34,14 +42,18 @@ class GameOfLife:
                 for dy in [-1, 0, 1]:
                     if (dx, dy) != (0, 0):  # Skip the cell itself
                         neighborX, neighborY = x + dx, y + dy
-                        neighborCounts[(neighborX, neighborY)] = (
-                            neighborCounts.get((neighborX, neighborY), 0) + 1
-                        )
+                        if self.isWithinBorder(neighborX, neighborY):  # Check border
+                            neighborCounts[(neighborX, neighborY)] = (
+                                neighborCounts.get((neighborX, neighborY), 0) + 1
+                            )
 
-        # Apply the rules and logic of the Game of Life
+        # Apply the rules of the Game of Life
         for position, count in neighborCounts.items():
-            if count == 3 or (count == 2 and position in self.cells):
-                newCells[position] = True
+            if self.isWithinBorder(*position):  # Only consider cells within the border
+                if count == 3 or (count == 2 and position in self.cells):
+                    newCells[position] = True
+            else:
+                del self.cells[(x, y)]
 
         self.cells = newCells
 
