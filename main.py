@@ -77,9 +77,9 @@ def drawBorder(app):
 
 def redrawAll(app):
     drawBackground(app)
+    app.lifeSim.draw(app)
     drawGreenSquare(app)
     drawGrid(app)
-    app.lifeSim.draw(app)
     drawBorder(app)
     # Draw the UI buttons
     app.buttonUI.drawButtons()
@@ -188,8 +188,8 @@ def onAppStart(app):
     # Board
     app.gridSize = 20
     app.lifeSim = GameOfLife(app.gridSize)
-    app.boardLimitX = 30
-    app.boardLimitY = 30
+    app.boardLimitX = 10
+    app.boardLimitY = 10
     app.lifeSim.borderX = app.boardLimitX
     app.lifeSim.borderY = app.boardLimitY
     app.offsetX, app.offsetY = 0, 0
@@ -208,6 +208,8 @@ def onAppStart(app):
     app.running = False
     app.stepTimer = 0
     app.difficulty = 30
+    app.lifeSim.futurePrediction = True
+
     app.borderReached = False
 
     # Initialize the UI buttons with positions and sizes
