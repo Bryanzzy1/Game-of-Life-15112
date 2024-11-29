@@ -58,12 +58,30 @@ def adjustZoom(app, factor):
         updateCamera(app)
 
 
+# Draw the red border overlay
+def drawBorder(app):
+    left = app.width // 2 + app.offsetX - app.boardLimitX * app.gridSize
+    right = app.width // 2 + app.offsetX + app.boardLimitX * app.gridSize
+    top = app.height // 2 + app.offsetY - app.boardLimitY * app.gridSize
+    bottom = app.height // 2 + app.offsetY + app.boardLimitY * app.gridSize
+
+    drawRect(
+        left,
+        top,
+        right - left,
+        bottom - top,
+        fill=None,
+        border="red",
+        borderWidth=3,
+    )
+
+
 def redrawAll(app):
     drawBackground(app)
     drawGreenSquare(app)
     drawGrid(app)
     app.lifeSim.draw(app)
-
+    drawBorder(app)
     # Draw the UI buttons
     app.buttonUI.drawButtons()
 
@@ -77,17 +95,16 @@ def redrawAll(app):
             fill="red",
             size=25,
         )
-
-    # Display "border reached!" message if the player has reached the border
-    if app.borderReached:
-        drawLabel(
-            "Border Reached!",
-            app.width // 2,
-            app.height // 2,
-            size=40,
-            fill="red",
-            bold=True,
-        )
+        # Display "border reached!" message if the player has reached the border
+        if app.borderReached:
+            drawLabel(
+                "Border Reached!",
+                app.width // 2,
+                app.height // 2,
+                size=40,
+                fill="red",
+                bold=True,
+            )
 
 
 # Restart the game
@@ -178,7 +195,7 @@ def onAppStart(app):
     app.greenSquareX, app.greenSquareY = -1, -1
     app.newGreenSquareX, app.newGreenSquareY = -1, -1
     app.boardLimitX = 10
-    app.boardLImitY = 10
+    app.boardLimitY = 10
 
     # Animation
     app.animation = False
