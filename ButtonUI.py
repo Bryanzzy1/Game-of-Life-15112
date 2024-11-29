@@ -54,18 +54,10 @@ class ButtonUI:
             self.pauseX <= mouseX <= self.pauseX + self.buttonWidth
             and self.pauseY <= mouseY <= self.pauseY + self.buttonHeight
         ):
-            return "pause"
+            self.app.running = False
         elif (
             self.resumeX <= mouseX <= self.resumeX + self.buttonWidth
             and self.resumeY <= mouseY <= self.resumeY + self.buttonHeight
         ):
-            return "resume"
-        return None
-
-    def handleClick(self, mouseX, mouseY):
-        # Check which button is clicked
-        buttonClicked = self.isClickOnButton(mouseX, mouseY)
-        if buttonClicked == "pause":
-            self.app.running = False
-        elif buttonClicked == "resume":
             self.app.running = True
+        return None
