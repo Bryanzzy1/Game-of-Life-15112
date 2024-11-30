@@ -3,31 +3,18 @@ from cmu_graphics import *
 
 # The button UI class that handles in game button events
 class ButtonUI:
-    def __init__(
-        self,
-        app,
-        pauseX,
-        pauseY,
-        resumeX,
-        resumeY,
-        settingsX,
-        settingsY,
-        titleX,
-        titleY,
-        buttonWidth,
-        buttonHeight,
-    ):
+    def __init__(self, app):
+        self.pauseX = 20
+        self.pauseY = 20
+        self.resumeX = 20
+        self.resumeY = 60
+        self.buttonWidth = 80
+        self.buttonHeight = 30
+        self.settingsX = 20
+        self.settingsY = 100
+        self.titleX = 20
+        self.titleY = 140
         self.app = app
-        self.buttonWidth = buttonWidth
-        self.buttonHeight = buttonHeight
-        self.pauseX = pauseX
-        self.pauseY = pauseY
-        self.resumeX = resumeX
-        self.resumeY = resumeY
-        self.settingsX = settingsX
-        self.settingsY = settingsY
-        self.titleX = titleX
-        self.titleY = titleY
 
     def drawButtons(self):
         # Draw the "Pause" button
@@ -81,23 +68,6 @@ class ButtonUI:
             fill="black",
         )
 
-        # Draw the "Title" button (for returning to the title screen)
-        drawRect(
-            self.titleX,
-            self.titleY,
-            self.buttonWidth,
-            self.buttonHeight,
-            fill="lightGreen",
-        )
-        drawLabel(
-            "Title",
-            self.titleX + self.buttonWidth / 2,
-            self.titleY + self.buttonHeight / 2,
-            size=12,
-            align="center",
-            fill="black",
-        )
-
     def isClickOnButton(self, mouseX, mouseY):
         # Check for "Pause" button
         if (
@@ -118,13 +88,6 @@ class ButtonUI:
             self.settingsX <= mouseX <= self.settingsX + self.buttonWidth
             and self.settingsY <= mouseY <= self.settingsY + self.buttonHeight
         ):
-            self.app.activeScreen = "settings"  # Navigate to settings screen
-
-        # Check for "Title" button
-        elif (
-            self.titleX <= mouseX <= self.titleX + self.buttonWidth
-            and self.titleY <= mouseY <= self.titleY + self.buttonHeight
-        ):
-            self.app.activeScreen = "start"  # Navigate back to the title screen
+            self.app.startScreen.activeScreen = "settings"
 
         return None
