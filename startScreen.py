@@ -21,7 +21,6 @@ class StartScreen:
             size=40,
             bold=True,
             fill="Black",
-            font="orbitron",
         )
         drawRect(
             app.width // 2 - 100,
@@ -35,7 +34,6 @@ class StartScreen:
             "Begin Game",
             app.width // 2,
             app.height // 2 - 30,
-            font="orbitron",
             size=20,
             fill="black",
         )
@@ -53,7 +51,6 @@ class StartScreen:
             app.height // 2 + 30,
             size=20,
             fill="black",
-            font="orbitron",
         )
 
     # Draws the settings menu, allowing the player to adjust border width and difficulty
@@ -61,22 +58,32 @@ class StartScreen:
         drawLabel(
             "Settings",
             app.width // 2,
-            app.height // 4,
+            60,
             size=40,
             bold=True,
-            fill="white",
-            font="orbitron",
         )
-
+        drawLabel(
+            "Only applies after",
+            app.width // 2,
+            100,
+            size=20,
+            bold=False,
+        )
+        drawLabel(
+            "resetting or going back to title",
+            app.width // 2,
+            125,
+            size=20,
+            bold=False,
+        )
         # Input for border width
         drawLabel(
-            "Border Width:",
+            "Border Width (10-20):",
             app.width // 2 - 100,
             app.height // 2 - 50,
             size=20,
             fill="black",
             align="right",
-            font="orbitron",
         )
         drawRect(
             app.width // 2 + 10,
@@ -92,18 +99,23 @@ class StartScreen:
             app.height // 2 - 50,
             size=20,
             fill="black",
-            font="orbitron",
+        )
+        drawLabel(
+            str(self.borderWidth),
+            app.width // 2 + 60,
+            app.height // 2 - 50,
+            size=20,
+            fill="black",
         )
 
         # Dropdown for difficulty
         drawLabel(
-            "Difficulty:",
+            "Difficulty (1-5):",
             app.width // 2 - 100,
             app.height // 2 + 10,
             size=20,
             fill="black",
             align="right",
-            font="orbitron",
         )
         drawRect(
             app.width // 2 + 10,
@@ -117,6 +129,32 @@ class StartScreen:
             str(self.selectedDifficulty),
             app.width // 2 + 60,
             app.height // 2 + 10,
+            size=20,
+            fill="black",
+        )
+
+        # Input for future Prediction
+        drawLabel(
+            "Future Prediction:",
+            app.width // 2 - 100,
+            app.height // 2 - 110,
+            size=20,
+            fill="black",
+            align="right",
+            font="orbitron",
+        )
+        drawRect(
+            app.width // 2 + 10,
+            app.height // 2 - 125,
+            100,
+            30,
+            fill="white",
+            border="black",
+        )
+        drawLabel(
+            str(app.futurePrediction),
+            app.width // 2 + 60,
+            app.height // 2 - 110,
             size=20,
             fill="black",
             font="orbitron",
@@ -141,7 +179,6 @@ class StartScreen:
                     optionY + 15,
                     size=20,
                     fill="black",
-                    font="orbitron",
                 )
 
         # Have an option to go back to the game screen if needed
@@ -160,7 +197,6 @@ class StartScreen:
                 app.height - 60,
                 size=20,
                 fill="black",
-                font="orbitron",
             )
 
         # Title button to go back to the start screen
@@ -178,7 +214,6 @@ class StartScreen:
             app.height - 60,
             size=20,
             fill="black",
-            font="orbitron",
         )
 
     # Handles mouse presses for navigating the start and settings screens
@@ -210,15 +245,22 @@ class StartScreen:
                 self.count += 2
                 self.borderWidth = (self.count) % 12 + 10
 
+            # Check for future prediction input
+            elif (
+                app.width // 2 + 10 <= mouseX <= app.width // 2 + 110
+                and app.height // 2 - 125 <= mouseY <= app.height // 2 - 95
+            ):
+                app.futurePrediction = not app.futurePrediction
+
             # Check for dropdown toggle
-            if (
+            elif (
                 app.width // 2 + 10 <= mouseX <= app.width // 2 + 110
                 and app.height // 2 - 5 <= mouseY <= app.height // 2 + 25
             ):
                 self.showDropdown = not self.showDropdown
 
             # Check for dropdown options
-            if self.showDropdown:
+            elif self.showDropdown:
                 yOffset = 35
                 for i in range(len(self.difficultyOptions)):
                     optionY = app.height // 2 - 5 + yOffset * (i + 1)
@@ -230,7 +272,7 @@ class StartScreen:
                         self.showDropdown = False
 
             # Check for "Back" button
-            if (
+            elif (
                 app.settingScreen
                 and app.width // 2 - 260 <= mouseX <= app.width // 2 - 160
                 and app.height - 80 <= mouseY <= app.height - 40
@@ -240,12 +282,13 @@ class StartScreen:
                 app.settingScreen = False
 
             # Check for "Title" button
-            if (
+            elif (
                 app.width // 2 - 100 <= mouseX <= app.width // 2 + 100
                 and app.height - 80 <= mouseY <= app.height - 40
             ):
                 self.activeScreen = "start"
                 app.startGame = False
+                app.settingScreen = False
 
     # Returns the current settings
     def getSettings(self):
