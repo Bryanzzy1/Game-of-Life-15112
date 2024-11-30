@@ -22,6 +22,8 @@ class StartScreen:
             bold=True,
             fill="Black",
         )
+
+        # Begin Button
         drawRect(
             app.width // 2 - 100,
             app.height // 2 - 50,
@@ -37,6 +39,8 @@ class StartScreen:
             size=20,
             fill="black",
         )
+
+        # Setting Button
         drawRect(
             app.width // 2 - 100,
             app.height // 2 + 10,
@@ -49,6 +53,23 @@ class StartScreen:
             "Settings",
             app.width // 2,
             app.height // 2 + 30,
+            size=20,
+            fill="black",
+        )
+
+        # Tutorial Button
+        drawRect(
+            app.width // 2 - 100,
+            app.height // 2 + 70,
+            200,
+            40,
+            fill="lightYellow",
+            border="black",
+        )
+        drawLabel(
+            "Tutorial",
+            app.width // 2,
+            app.height // 2 + 90,
             size=20,
             fill="black",
         )
@@ -79,14 +100,14 @@ class StartScreen:
         # Input for border width
         drawLabel(
             "Border Width (10-20):",
-            app.width // 2 - 100,
+            app.width // 2 - 40,
             app.height // 2 - 50,
             size=20,
             fill="black",
             align="right",
         )
         drawRect(
-            app.width // 2 + 10,
+            app.width // 2 + 70,
             app.height // 2 - 65,
             100,
             30,
@@ -95,14 +116,7 @@ class StartScreen:
         )
         drawLabel(
             str(self.borderWidth),
-            app.width // 2 + 60,
-            app.height // 2 - 50,
-            size=20,
-            fill="black",
-        )
-        drawLabel(
-            str(self.borderWidth),
-            app.width // 2 + 60,
+            app.width // 2 + 120,
             app.height // 2 - 50,
             size=20,
             fill="black",
@@ -111,14 +125,14 @@ class StartScreen:
         # Dropdown for difficulty
         drawLabel(
             "Difficulty (1-5):",
-            app.width // 2 - 100,
+            app.width // 2 - 40,
             app.height // 2 + 10,
             size=20,
             fill="black",
             align="right",
         )
         drawRect(
-            app.width // 2 + 10,
+            app.width // 2 + 70,
             app.height // 2 - 5,
             100,
             30,
@@ -127,7 +141,7 @@ class StartScreen:
         )
         drawLabel(
             str(self.selectedDifficulty),
-            app.width // 2 + 60,
+            app.width // 2 + 120,
             app.height // 2 + 10,
             size=20,
             fill="black",
@@ -136,7 +150,7 @@ class StartScreen:
         # Input for future Prediction
         drawLabel(
             "Future Prediction:",
-            app.width // 2 - 100,
+            app.width // 2 - 40,
             app.height // 2 - 110,
             size=20,
             fill="black",
@@ -144,7 +158,7 @@ class StartScreen:
             font="orbitron",
         )
         drawRect(
-            app.width // 2 + 10,
+            app.width // 2 + 70,
             app.height // 2 - 125,
             100,
             30,
@@ -153,7 +167,7 @@ class StartScreen:
         )
         drawLabel(
             str(app.futurePrediction),
-            app.width // 2 + 60,
+            app.width // 2 + 120,
             app.height // 2 - 110,
             size=20,
             fill="black",
@@ -166,7 +180,7 @@ class StartScreen:
             for i in range(len(self.difficultyOptions)):
                 optionY = app.height // 2 - 5 + yOffset * (i + 1)
                 drawRect(
-                    app.width // 2 + 10,
+                    app.width // 2 + 70,
                     optionY,
                     100,
                     30,
@@ -175,7 +189,7 @@ class StartScreen:
                 )
                 drawLabel(
                     str(self.difficultyOptions[i]),
-                    app.width // 2 + 60,
+                    app.width // 2 + 120,
                     optionY + 15,
                     size=20,
                     fill="black",
@@ -216,6 +230,75 @@ class StartScreen:
             fill="black",
         )
 
+    # Draws the tutorial screen
+    def drawTutorialScreen(self, app):
+        drawRect(0, 0, app.width, app.height, fill="lightGray")
+        drawLabel(
+            "Tutorial",
+            app.width // 2,
+            60,
+            size=40,
+            bold=True,
+        )
+        drawLabel(
+            "Welcome to the Game of LIFE tutorial!",
+            app.width // 2,
+            120,
+            size=20,
+        )
+        drawLabel(
+            "1. Learn about cells and patterns.",
+            app.width // 2,
+            160,
+            size=18,
+        )
+        drawLabel(
+            "2. Place cells and observe the rules of life.",
+            app.width // 2,
+            200,
+            size=18,
+        )
+        drawLabel(
+            "3. Press the 'Back' button to return to the main menu.",
+            app.width // 2,
+            240,
+            size=18,
+        )
+
+        # Begin Tutorial Button
+        drawRect(
+            app.width // 2 - 100,
+            app.height - 140,
+            200,
+            40,
+            fill="lightGreen",
+            border="black",
+        )
+        drawLabel(
+            "Begin",
+            app.width // 2,
+            app.height - 120,
+            size=20,
+            fill="black",
+        )
+
+        # Back to Start Button
+        drawRect(
+            app.width // 2 - 100,
+            app.height - 80,
+            200,
+            40,
+            fill="lightCoral",
+            border="black",
+        )
+        drawLabel(
+            "Back",
+            app.width // 2,
+            app.height - 60,
+            size=20,
+            fill="black",
+        )
+
     # Handles mouse presses for navigating the start and settings screens
     def handleMousePress(self, app, mouseX, mouseY):
         if self.activeScreen == "start":
@@ -229,6 +312,17 @@ class StartScreen:
                 app.startGame = True
                 app.settingScreen = False
 
+            # Check for "Tutorial" button
+            elif (
+                app.width // 2 - 100 <= mouseX <= app.width // 2 + 100
+                and app.height // 2 + 70 <= mouseY <= app.height // 2 + 110
+            ):
+                self.activeScreen = "tutorial"
+                app.beginTutorial = False
+                app.startOver = False
+                app.startGame = False
+                app.settingScreen = False
+
             # Check for "Settings" button
             elif (
                 app.width // 2 - 100 <= mouseX <= app.width // 2 + 100
@@ -236,10 +330,28 @@ class StartScreen:
             ):
                 self.activeScreen = "settings"
 
+        # Tutorial screens
+        elif self.activeScreen == "tutorial":
+            # The back to title button
+            if (
+                app.width // 2 - 100 <= mouseX <= app.width // 2 + 100
+                and app.height - 80 <= mouseY <= app.height - 40
+            ):
+                self.activeScreen = "start"
+                app.beginTutorial = False
+
+            # The begin tutorial button
+            elif (
+                app.width // 2 - 100 <= mouseX <= app.width // 2 + 100
+                and app.height - 140 <= mouseY <= app.height - 100
+            ):
+                app.beginTutorial = True
+
+        # Setting Screen
         elif self.activeScreen == "settings":
             # Check for border width input
             if (
-                app.width // 2 + 10 <= mouseX <= app.width // 2 + 110
+                app.width // 2 + 70 <= mouseX <= app.width // 2 + 170
                 and app.height // 2 - 65 <= mouseY <= app.height // 2 - 35
             ):
                 self.count += 2
@@ -247,14 +359,14 @@ class StartScreen:
 
             # Check for future prediction input
             elif (
-                app.width // 2 + 10 <= mouseX <= app.width // 2 + 110
+                app.width // 2 + 70 <= mouseX <= app.width // 2 + 170
                 and app.height // 2 - 125 <= mouseY <= app.height // 2 - 95
             ):
                 app.futurePrediction = not app.futurePrediction
 
             # Check for dropdown toggle
             elif (
-                app.width // 2 + 10 <= mouseX <= app.width // 2 + 110
+                app.width // 2 + 70 <= mouseX <= app.width // 2 + 170
                 and app.height // 2 - 5 <= mouseY <= app.height // 2 + 25
             ):
                 self.showDropdown = not self.showDropdown
@@ -265,7 +377,7 @@ class StartScreen:
                 for i in range(len(self.difficultyOptions)):
                     optionY = app.height // 2 - 5 + yOffset * (i + 1)
                     if (
-                        app.width // 2 + 10 <= mouseX <= app.width // 2 + 110
+                        app.width // 2 + 70 <= mouseX <= app.width // 2 + 170
                         and optionY <= mouseY <= optionY + 30
                     ):
                         self.selectedDifficulty = self.difficultyOptions[i]
@@ -289,6 +401,7 @@ class StartScreen:
                 self.activeScreen = "start"
                 app.startGame = False
                 app.settingScreen = False
+                app.beginTutorial = False
 
     # Returns the current settings
     def getSettings(self):
