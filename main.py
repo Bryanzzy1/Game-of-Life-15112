@@ -13,10 +13,12 @@ from playerSquare import (
 )
 from ButtonUI import ButtonUI
 from gameObjective import GameObjective
+from startScreen import StartScreen
+
 
 # Colors
-borderColor = rgb(204, 221, 230)  # Light blue for the grid lines
-backgroundColor = rgb(58, 61, 66)  # Dark grey for the background
+borderColor = rgb(204, 221, 230)
+backgroundColor = rgb(58, 61, 66)
 
 # Constants for grid configuration
 
@@ -80,56 +82,71 @@ def drawBorder(app):
 
 
 def redrawAll(app):
-    drawBackground(app)
-    app.lifeSim.draw(app)
-    drawGreenSquare(app)
-    drawGrid(app)
-    app.objective.drawTargets(app)
-    drawBorder(app)
-    # Draw the UI buttons
-    app.buttonUI.drawButtons()
-
-    if app.gameOver:
-        drawGameOver(app)
+    if not app.startGame:
+        if app.startScreen.activeScreen == "start":
+            app.startScreen.drawStartScreen(app)
+        elif app.startScreen.activeScreen == "settings":
+            app.startScreen.drawSettingsScreen(app)
     else:
-        drawLabel(
-            f"Live Cells: {app.lifeSim.liveCount()}",
-            app.width - 100,
-            10,
-            fill="red",
-            size=25,
-        )
+        drawBackground(app)
+        app.lifeSim.draw(app)
+        drawGreenSquare(app)
+        drawGrid(app)
+        app.objective.drawTargets(app)
+        drawBorder(app)
+        # Draw the UI buttons
+        app.buttonUI.drawButtons()
 
-        drawLabel(
-            f"Time Left: {app.countdownTimer}",
-            app.width // 2,
-            10,
-            fill="red",
-            size=25,
-            align="center",
-        )
-
-        # Display "border reached!" message if the player has reached the border
-        if app.borderReached:
+        if app.gameOver:
+            drawGameOver(app)
+        else:
             drawLabel(
-                "Border Reached!",
-                app.width // 2,
-                app.height // 2,
-                size=40,
+                f"Live Cells: {app.lifeSim.liveCount()}",
+                app.width - 100,
+                10,
                 fill="red",
-                bold=True,
+                size=25,
             )
+
+            drawLabel(
+                f"Time Left: {app.countdownTimer}",
+                app.width // 2,
+                10,
+                fill="red",
+                size=25,
+                align="center",
+            )
+
+            # Display "border reached!" message if the player has reached the border
+            if app.borderReached:
+                drawLabel(
+                    "Border Reached!",
+                    app.width // 2,
+                    app.height // 2,
+                    size=40,
+                    fill="red",
+                    bold=True,
+                )
 
 
 # Restart the game
 def restartGame(app):
     app.gameOver = False
     app.running = False
-    app.countdownTimer = 100
+    app.countdownTimer = 30 + app.difficulty * 10
     app.borderReached = False
     app.playerWins = False
+    app.stepTimer = 0
+    app.animation = False
+    app.backwardAnimation = False
+    app.animationScale = 1
+
+    # Reset player position and grid simulation
     resetPlayerPosition(app)
     app.lifeSim = GameOfLife(app.gridSize)
+
+    # Reinitialize the game objective
+    app.objective = GameObjective(app, app.difficulty)
 
 
 # Draw the restart game labels
@@ -165,12 +182,15 @@ def drawGameOver(app):
 
 # Handle on mouse press events
 def onMousePress(app, mouseX, mouseY):
-    app.buttonUI.isClickOnButton(mouseX, mouseY)
+    if not app.startGame:
+        app.startScreen.handleMousePress(app, mouseX, mouseY)
+    else:
+        app.buttonUI.isClickOnButton(mouseX, mouseY)
 
 
 # Handles the logic for player movement and some UI
 def onKeyPress(app, key):
-    if app.gameOver and key == "r":
+    if (app.gameOver or app.playerWins) and key == "r":
         restartGame(app)
     elif not app.gameOver:
         if key in ["+", "="]:
@@ -212,10 +232,15 @@ def onStep(app):
 
 
 def onAppStart(app):
-    # Board
+    # Start Screen
+    app.startScreen = StartScreen()
+    app.startGame = False
+    app.borderWidth, app.difficulty = app.startScreen.getSettings()
+
+    # Board Setup
     app.gridSize = 20
-    app.boardLimitX = 20
-    app.boardLimitY = 20
+    app.boardLimitX = app.borderWidth
+    app.boardLimitY = app.borderWidth
     app.borderReached = False
     app.lineThickness = 1.5
 
