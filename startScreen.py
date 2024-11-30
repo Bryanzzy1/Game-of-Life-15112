@@ -15,12 +15,13 @@ class StartScreen:
     # Draws the initial start menu with options to begin the game or go to settings
     def drawStartScreen(self, app):
         drawLabel(
-            "Game Of LIFE",
+            "The Game of LIFE",
             app.width // 2,
             app.height // 4,
             size=40,
             bold=True,
             fill="Black",
+            font="orbitron",
         )
         drawRect(
             app.width // 2 - 100,
@@ -31,7 +32,12 @@ class StartScreen:
             border="black",
         )
         drawLabel(
-            "Begin Game", app.width // 2, app.height // 2 - 30, size=20, fill="black"
+            "Begin Game",
+            app.width // 2,
+            app.height // 2 - 30,
+            font="orbitron",
+            size=20,
+            fill="black",
         )
         drawRect(
             app.width // 2 - 100,
@@ -42,7 +48,12 @@ class StartScreen:
             border="black",
         )
         drawLabel(
-            "Settings", app.width // 2, app.height // 2 + 30, size=20, fill="black"
+            "Settings",
+            app.width // 2,
+            app.height // 2 + 30,
+            size=20,
+            fill="black",
+            font="orbitron",
         )
 
     # Draws the settings menu, allowing the player to adjust border width and difficulty
@@ -54,6 +65,7 @@ class StartScreen:
             size=40,
             bold=True,
             fill="white",
+            font="orbitron",
         )
 
         # Input for border width
@@ -62,8 +74,9 @@ class StartScreen:
             app.width // 2 - 100,
             app.height // 2 - 50,
             size=20,
-            fill="Black",
+            fill="black",
             align="right",
+            font="orbitron",
         )
         drawRect(
             app.width // 2 + 10,
@@ -78,7 +91,8 @@ class StartScreen:
             app.width // 2 + 60,
             app.height // 2 - 50,
             size=20,
-            fill="Black",
+            fill="black",
+            font="orbitron",
         )
 
         # Dropdown for difficulty
@@ -87,8 +101,9 @@ class StartScreen:
             app.width // 2 - 100,
             app.height // 2 + 10,
             size=20,
-            fill="Black",
+            fill="black",
             align="right",
+            font="orbitron",
         )
         drawRect(
             app.width // 2 + 10,
@@ -104,6 +119,7 @@ class StartScreen:
             app.height // 2 + 10,
             size=20,
             fill="black",
+            font="orbitron",
         )
 
         # Dropdown options
@@ -125,13 +141,45 @@ class StartScreen:
                     optionY + 15,
                     size=20,
                     fill="black",
+                    font="orbitron",
                 )
 
-        # Back button
+        # Have an option to go back to the game screen if needed
+        if app.settingScreen:
+            drawRect(
+                app.width // 2 - 260,
+                app.height - 80,
+                100,
+                40,
+                fill="lightGreen",
+                border="black",
+            )
+            drawLabel(
+                "Back",
+                app.width // 2 - 210,
+                app.height - 60,
+                size=20,
+                fill="black",
+                font="orbitron",
+            )
+
+        # Title button to go back to the start screen
         drawRect(
-            app.width // 2 - 100, app.height - 80, 200, 40, fill="red", border="black"
+            app.width // 2 - 100,
+            app.height - 80,
+            200,
+            40,
+            fill="lightCoral",
+            border="black",
         )
-        drawLabel("Back", app.width // 2, app.height - 60, size=20, fill="white")
+        drawLabel(
+            "Title",
+            app.width // 2,
+            app.height - 60,
+            size=20,
+            fill="black",
+            font="orbitron",
+        )
 
     # Handles mouse presses for navigating the start and settings screens
     def handleMousePress(self, app, mouseX, mouseY):
@@ -141,7 +189,10 @@ class StartScreen:
                 app.width // 2 - 100 <= mouseX <= app.width // 2 + 100
                 and app.height // 2 - 50 <= mouseY <= app.height // 2 - 10
             ):
+                self.activeScreen = "game"
+                app.startOver = True
                 app.startGame = True
+                app.settingScreen = False
 
             # Check for "Settings" button
             elif (
@@ -176,14 +227,25 @@ class StartScreen:
                         and optionY <= mouseY <= optionY + 30
                     ):
                         self.selectedDifficulty = self.difficultyOptions[i]
-                        self.showDropdown = False  # Close dropdown after selection
+                        self.showDropdown = False
 
             # Check for "Back" button
+            if (
+                app.settingScreen
+                and app.width // 2 - 260 <= mouseX <= app.width // 2 - 160
+                and app.height - 80 <= mouseY <= app.height - 40
+            ):
+                self.activeScreen = "settings"
+                app.startGame = True
+                app.settingScreen = False
+
+            # Check for "Title" button
             if (
                 app.width // 2 - 100 <= mouseX <= app.width // 2 + 100
                 and app.height - 80 <= mouseY <= app.height - 40
             ):
                 self.activeScreen = "start"
+                app.startGame = False
 
     # Returns the current settings
     def getSettings(self):
