@@ -11,7 +11,8 @@ from playerSquare import (
     checkCollision,
     moveGreenSquare,
 )
-from ButtonUI import ButtonUI  # Import the ButtonUI class
+from ButtonUI import ButtonUI
+from gameObjective import GameObjective
 
 # Colors
 borderColor = rgb(204, 221, 230)  # Light blue for the grid lines
@@ -83,6 +84,7 @@ def redrawAll(app):
     app.lifeSim.draw(app)
     drawGreenSquare(app)
     drawGrid(app)
+    app.objective.drawTargets(app)
     drawBorder(app)
     # Draw the UI buttons
     app.buttonUI.drawButtons()
@@ -104,6 +106,7 @@ def redrawAll(app):
             10,
             fill="red",
             size=25,
+            align="center",
         )
 
         # Display "border reached!" message if the player has reached the border
@@ -124,23 +127,33 @@ def restartGame(app):
     app.running = False
     app.countdownTimer = 100
     app.borderReached = False
+    app.playerWins = False
     resetPlayerPosition(app)
     app.lifeSim = GameOfLife(app.gridSize)
 
 
 # Draw the restart game labels
 def drawGameOver(app):
-    drawLabel(
-        "Game Over", app.width // 2, app.height // 2, size=32, fill="red", bold=True
-    )
-    drawLabel(
-        "Avoid the white cells!",
-        app.width // 2,
-        app.height // 2 + 40,
-        size=18,
-        fill="white",
-    )
-
+    if app.playerWins:
+        drawLabel(
+            "You Win!",
+            app.width // 2,
+            app.height // 2,
+            size=32,
+            fill="green",
+            bold=True,
+        )
+    else:
+        drawLabel(
+            "Game Over", app.width // 2, app.height // 2, size=32, fill="red", bold=True
+        )
+        drawLabel(
+            "Avoid the white cells!",
+            app.width // 2,
+            app.height // 2 + 40,
+            size=18,
+            fill="white",
+        )
     drawLabel(
         "Press 'R' to restart",
         app.width // 2,
@@ -166,23 +179,27 @@ def onKeyPress(app, key):
             adjustZoom(app, 1 / zoomFactor)
         elif key == "space":
             app.running = not app.running
-        elif key in ["left", "a"]:
-            moveGreenSquare(app, app.greenSquareX - 1, app.greenSquareY)
-        elif key in ["right", "d"]:
-            moveGreenSquare(app, app.greenSquareX + 1, app.greenSquareY)
-        elif key in ["up", "w"]:
-            moveGreenSquare(app, app.greenSquareX, app.greenSquareY - 1)
-        elif key in ["down", "s"]:
-            moveGreenSquare(app, app.greenSquareX, app.greenSquareY + 1)
+        if app.running:
+            if key in ["left", "a"]:
+                moveGreenSquare(app, app.greenSquareX - 1, app.greenSquareY)
+            elif key in ["right", "d"]:
+                moveGreenSquare(app, app.greenSquareX + 1, app.greenSquareY)
+            elif key in ["up", "w"]:
+                moveGreenSquare(app, app.greenSquareX, app.greenSquareY - 1)
+            elif key in ["down", "s"]:
+                moveGreenSquare(app, app.greenSquareX, app.greenSquareY + 1)
 
 
 def onStep(app):
     checkCollision(app)
+    if not app.gameOver and app.objective.checkCompletion(app):
+        app.gameOver = True
+        app.playerWins = True
 
     if app.running:
         # Controls how fast the cells are mutating/difficulty control
         app.stepTimer += 1
-        if app.stepTimer % app.difficulty == 0:
+        if app.stepTimer % app.timer == 0:
             # Countdown timer
             if not app.gameOver and app.countdownTimer > 0:
                 app.countdownTimer -= 1
@@ -195,11 +212,6 @@ def onStep(app):
 
 
 def onAppStart(app):
-    # Difficulty
-    app.difficulty = 20
-    app.futurePrediction = True
-    app.countdownTimer = 50
-
     # Board
     app.gridSize = 20
     app.boardLimitX = 20
@@ -211,10 +223,18 @@ def onAppStart(app):
     app.greenSquareX, app.greenSquareY = -1, -1
     app.newGreenSquareX, app.newGreenSquareY = -1, -1
 
+    # Difficulty
+    app.difficulty = 1
+    app.timer = 40 - app.difficulty * 6
+    app.futurePrediction = True
+    app.countdownTimer = 30 + app.difficulty * 10
+    app.objective = GameObjective(app, app.difficulty)
+
     # Simulation
     app.lifeSim = GameOfLife(app.gridSize)
     app.offsetX, app.offsetY = 0, 0
     app.gameOver = False
+    app.playerWins = False
 
     # Animation
     app.animation = False
