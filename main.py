@@ -200,7 +200,7 @@ def onMousePress(app, mouseX, mouseY):
 
 # Handles the logic for player movement and some UI
 def onKeyPress(app, key):
-    if app.startGame and (app.playerWins or app.app.startOver and key == "r"):
+    if app.startGame and (app.playerWins or app.gameOver and key == "r"):
         restartGame(app)
     elif app.startGame and not app.gameOver:
         if key in ["+", "="]:
