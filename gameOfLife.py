@@ -19,6 +19,12 @@ class GameOfLife:
         # Initiate the randomized dictionary start
         self.randomize()
 
+    def toggle_cell(self, x, y):
+        if (x, y) in self.cells:
+            del self.cells[(x, y)]
+        else:
+            self.cells[(x, y)] = True
+
     def randomize(self):
         # Define a buffer zone distance around the player square to avoid placement
         bufferZone = 2
