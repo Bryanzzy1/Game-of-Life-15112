@@ -87,46 +87,50 @@ def redrawAll(app):
             app.startScreen.drawStartScreen(app)
         elif app.startScreen.activeScreen == "settings":
             app.startScreen.drawSettingsScreen(app)
-    else:
-        drawBackground(app)
-        app.lifeSim.draw(app)
-        drawGreenSquare(app)
-        drawGrid(app)
-        app.objective.drawTargets(app)
-        drawBorder(app)
-        # Draw the UI buttons
-        app.buttonUI.drawButtons()
 
-        if app.gameOver:
-            drawGameOver(app)
+    elif app.drawAllowed:
+        # Draw the setting screen if that button is pressed
+        if app.settingScreen:
+            app.startScreen.drawSettingsScreen(app)
         else:
-            drawLabel(
-                f"Live Cells: {app.lifeSim.liveCount()}",
-                app.width - 100,
-                10,
-                fill="red",
-                size=25,
-            )
+            drawBackground(app)
+            app.lifeSim.draw(app)
+            drawGreenSquare(app)
+            drawGrid(app)
+            app.objective.drawTargets(app)
+            drawBorder(app)
+            app.buttonUI.drawButtons()
 
-            drawLabel(
-                f"Time Left: {app.countdownTimer}",
-                app.width // 2,
-                10,
-                fill="red",
-                size=25,
-                align="center",
-            )
-
-            # Display "border reached!" message if the player has reached the border
-            if app.borderReached:
+            if app.gameOver:
+                drawGameOver(app)
+            else:
                 drawLabel(
-                    "Border Reached!",
-                    app.width // 2,
-                    app.height // 2,
-                    size=40,
+                    f"Live Cells: {app.lifeSim.liveCount()}",
+                    app.width - 100,
+                    10,
                     fill="red",
-                    bold=True,
+                    size=25,
                 )
+
+                drawLabel(
+                    f"Time Left: {app.countdownTimer}",
+                    app.width // 2,
+                    10,
+                    fill="red",
+                    size=25,
+                    align="center",
+                )
+
+                # Display "border reached!" message if the player has reached the border
+                if app.borderReached:
+                    drawLabel(
+                        "Border Reached!",
+                        app.width // 2,
+                        app.height // 2,
+                        size=40,
+                        fill="red",
+                        bold=True,
+                    )
 
 
 # Restart the game
@@ -136,6 +140,7 @@ def restartGame(app):
     app.countdownTimer = 30 + app.difficulty * 10
     app.borderReached = False
     app.playerWins = False
+    app.startOver = False
     app.stepTimer = 0
     app.animation = False
     app.backwardAnimation = False
@@ -186,13 +191,18 @@ def onMousePress(app, mouseX, mouseY):
         app.startScreen.handleMousePress(app, mouseX, mouseY)
     else:
         app.buttonUI.isClickOnButton(mouseX, mouseY)
+        if app.startScreen.activeScreen == "start":
+            titleScreen(app)
+        elif app.startScreen.activeScreen == "settings":
+            app.settingScreen = True
+            app.startScreen.handleMousePress(app, mouseX, mouseY)
 
 
 # Handles the logic for player movement and some UI
 def onKeyPress(app, key):
-    if (app.gameOver or app.playerWins) and key == "r":
+    if app.startGame and (app.playerWins or app.app.startOver and key == "r"):
         restartGame(app)
-    elif not app.gameOver:
+    elif app.startGame and not app.gameOver:
         if key in ["+", "="]:
             adjustZoom(app, zoomFactor)
         elif key == "-":
@@ -211,30 +221,48 @@ def onKeyPress(app, key):
 
 
 def onStep(app):
-    checkCollision(app)
-    if not app.gameOver and app.objective.checkCompletion(app):
-        app.gameOver = True
-        app.playerWins = True
-
-    if app.running:
-        # Controls how fast the cells are mutating/difficulty control
-        app.stepTimer += 1
-        if app.stepTimer % app.timer == 0:
-            # Countdown timer
-            if not app.gameOver and app.countdownTimer > 0:
-                app.countdownTimer -= 1
+    if app.startGame:
+        if not app.drawAllowed:
+            initializeVariable(app)
+        else:
+            if app.startOver:
+                restartGame(app)
             else:
-                app.gameOver = True
-            app.lifeSim.step()
+                checkCollision(app)
+                if not app.gameOver and app.objective.checkCompletion(app):
+                    app.gameOver = True
+                    app.playerWins = True
 
-    if app.animation:
-        animateGreenSquare(app)
+                if app.running:
+                    # Controls how fast the cells are mutating/difficulty control
+                    app.stepTimer += 1
+                    if app.stepTimer % app.timer == 0:
+                        # Countdown timer
+                        if not app.gameOver and app.countdownTimer > 0:
+                            app.countdownTimer -= 1
+                        else:
+                            app.gameOver = True
+                        app.lifeSim.step()
+
+                if app.animation:
+                    animateGreenSquare(app)
 
 
 def onAppStart(app):
-    # Start Screen
-    app.startScreen = StartScreen()
+    app.drawAllowed = False
     app.startGame = False
+    app.settingScreen = False
+    titleScreen(app)
+
+
+def titleScreen(app):
+    if not app.startGame:
+        # Start Screen
+        app.startScreen = StartScreen()
+
+
+def initializeVariable(app):
+    app.startOver = False
     app.borderWidth, app.difficulty = app.startScreen.getSettings()
 
     # Board Setup
@@ -249,7 +277,6 @@ def onAppStart(app):
     app.newGreenSquareX, app.newGreenSquareY = -1, -1
 
     # Difficulty
-    app.difficulty = 1
     app.timer = 40 - app.difficulty * 6
     app.futurePrediction = True
     app.countdownTimer = 30 + app.difficulty * 10
@@ -269,15 +296,8 @@ def onAppStart(app):
     app.stepTimer = 0
 
     # Initialize the UI buttons with positions and sizes
-    app.buttonUI = ButtonUI(
-        app,
-        pauseX=20,
-        pauseY=20,
-        resumeX=20,
-        resumeY=60,
-        buttonWidth=80,
-        buttonHeight=30,
-    )
+    app.buttonUI = ButtonUI(app)
+    app.drawAllowed = True
 
 
 runApp(width=600, height=600)
