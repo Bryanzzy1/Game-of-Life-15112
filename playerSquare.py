@@ -1,5 +1,4 @@
 from cmu_graphics import *
-from gameOfLife import GameOfLife
 
 greenSquareColor = rgb(0, 255, 0)
 
