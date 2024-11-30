@@ -25,7 +25,7 @@ class GameOfLife:
         playerX, playerY = app.greenSquareX, app.greenSquareY
 
         # Add multiple random shapes to the grid
-        numberOfShapes = random.randint(80, 120)
+        numberOfShapes = random.randint(100, 120)
         placedShapes = []
 
         for _ in range(numberOfShapes):
