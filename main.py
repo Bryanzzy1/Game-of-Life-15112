@@ -252,6 +252,7 @@ def onAppStart(app):
     app.drawAllowed = False
     app.startGame = False
     app.settingScreen = False
+    app.futurePrediction = False
     titleScreen(app)
 
 
@@ -278,7 +279,6 @@ def initializeVariable(app):
 
     # Difficulty
     app.timer = 40 - app.difficulty * 6
-    app.futurePrediction = True
     app.countdownTimer = 30 + app.difficulty * 10
     app.objective = GameObjective(app, app.difficulty)
 
