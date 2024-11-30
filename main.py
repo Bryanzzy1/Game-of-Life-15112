@@ -14,7 +14,7 @@ from playerSquare import (
 from ButtonUI import ButtonUI
 from gameObjective import GameObjective
 from startScreen import StartScreen
-
+from tutorial import Tutorial
 
 # Colors
 borderColor = rgb(204, 221, 230)
@@ -87,6 +87,10 @@ def redrawAll(app):
             app.startScreen.drawStartScreen(app)
         elif app.startScreen.activeScreen == "settings":
             app.startScreen.drawSettingsScreen(app)
+        elif app.beginTutorial:
+            app.tutorial.drawTutorial(app)
+        elif app.startScreen.activeScreen == "tutorial":
+            app.startScreen.drawTutorialScreen(app)
 
     elif app.drawAllowed:
         # Draw the setting screen if that button is pressed
@@ -145,6 +149,7 @@ def restartGame(app):
     app.animation = False
     app.backwardAnimation = False
     app.animationScale = 1
+    app.beginTutorial = False
 
     # Reset player position and grid simulation
     resetPlayerPosition(app)
@@ -162,7 +167,7 @@ def drawGameOver(app):
             app.width // 2,
             app.height // 2,
             size=32,
-            fill="green",
+            fill="lightGreen",
             bold=True,
         )
     else:
@@ -174,23 +179,36 @@ def drawGameOver(app):
             app.width // 2,
             app.height // 2 + 40,
             size=18,
-            fill="white",
+            fill="red",
         )
     drawLabel(
         "Press 'R' to restart",
         app.width // 2,
         app.height // 2 + 70,
         size=18,
-        fill="white",
+        fill="red",
     )
 
 
 # Handle on mouse press events
 def onMousePress(app, mouseX, mouseY):
     if not app.startGame:
-        app.startScreen.handleMousePress(app, mouseX, mouseY)
+        if app.beginTutorial:
+            app.tutorial.handleMousePress(app, mouseX, mouseY)
+        else:
+            app.startScreen.handleMousePress(app, mouseX, mouseY)
+
+        # Make sure the correct variable setting are passed
+        app.borderWidth, app.difficulty = app.startScreen.getSettings()
+        app.boardLimitX = app.borderWidth
+        app.boardLimitY = app.borderWidth
+        app.timer = 40 - app.difficulty * 6
+        app.countdownTimer = 20 + app.difficulty * 10
+
     else:
         app.buttonUI.isClickOnButton(mouseX, mouseY)
+
+        # Handles start Screen after the initial start screen
         if app.startScreen.activeScreen == "start":
             titleScreen(app)
         elif app.startScreen.activeScreen == "settings":
@@ -200,7 +218,9 @@ def onMousePress(app, mouseX, mouseY):
 
 # Handles the logic for player movement and some UI
 def onKeyPress(app, key):
-    if app.startGame and (app.playerWins or app.gameOver and key == "r"):
+    if app.beginTutorial:
+        app.tutorial.handleKeyPress(app, key)
+    elif app.startGame and (app.playerWins or app.gameOver and key == "r"):
         restartGame(app)
     elif app.startGame and not app.gameOver:
         if key in ["+", "="]:
@@ -249,10 +269,14 @@ def onStep(app):
 
 
 def onAppStart(app):
+    # Initial required variables
     app.drawAllowed = False
     app.startGame = False
     app.settingScreen = False
     app.futurePrediction = False
+    app.beginTutorial = False
+    app.tutorial = Tutorial()
+
     titleScreen(app)
 
 
@@ -279,7 +303,7 @@ def initializeVariable(app):
 
     # Difficulty
     app.timer = 40 - app.difficulty * 6
-    app.countdownTimer = 30 + app.difficulty * 10
+    app.countdownTimer = 20 + app.difficulty * 10
     app.objective = GameObjective(app, app.difficulty)
 
     # Simulation
