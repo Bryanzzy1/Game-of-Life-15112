@@ -21,7 +21,7 @@ class GameObjective:
                 x = random.randint(-app.boardLimitX + 1, app.boardLimitX - 1)
                 y = random.randint(-app.boardLimitY + 1, app.boardLimitY - 1)
 
-                # Ensure the square is not overlapping an existing target or the player's start
+                # Make sure the square is not overlapping an existing target or the player's start
                 if (x, y) not in self.targetSquares and (x, y) != (
                     app.greenSquareX,
                     app.greenSquareY,
