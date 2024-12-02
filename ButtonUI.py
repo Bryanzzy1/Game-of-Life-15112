@@ -43,7 +43,7 @@ class ButtonUI:
             fill="gray",
         )
         drawLabel(
-            "Resume",
+            "Start",
             self.resumeX + self.buttonWidth / 2,
             self.resumeY + self.buttonHeight / 2,
             size=12,
