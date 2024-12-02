@@ -264,6 +264,12 @@ class StartScreen:
             240,
             size=18,
         )
+        drawLabel(
+            "4. Press the Right and Left arrow button to go through the slides",
+            app.width // 2,
+            280,
+            size=18,
+        )
 
         # Begin Tutorial Button
         drawRect(
