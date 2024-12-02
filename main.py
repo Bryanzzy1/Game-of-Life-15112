@@ -220,7 +220,7 @@ def onMousePress(app, mouseX, mouseY):
 def onKeyPress(app, key):
     if app.beginTutorial:
         app.tutorial.handleKeyPress(app, key)
-    elif app.startGame and (app.playerWins or app.gameOver and key == "r"):
+    elif app.startGame and (app.playerWins or app.gameOver) and key == "r":
         restartGame(app)
     elif app.startGame and not app.gameOver:
         if key in ["+", "="]:
