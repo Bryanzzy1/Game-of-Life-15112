@@ -14,4 +14,4 @@ This app provides a visually appealing and intuitive simulation of Conway's Game
 Run the main.py file and make sure all files are in the same folder. No extra library beside cmu graphics need to be installed. To install cmu graphics please follow the instruction on the official CMU Computer Science Academy website: https://academy.cs.cmu.edu/desktop.
 
 ## Shortcut Commands
-There are only one short cut command. When the user presses the 'Begin' button during the title screen and is loaded up in to a level, the can press 'space' instead of pressing the 'start' button. 
+There are only one shortcut command. When the user presses the 'Begin' button during the title screen and is loaded up in to a level, the can press 'space' instead of pressing the 'start' button to start the level. 
