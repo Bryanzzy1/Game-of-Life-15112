@@ -67,24 +67,149 @@ class Tutorial:
     def drawRulesVisualization(self, app):
         drawRect(0, 0, app.width, app.height, fill="lightGray")
         self.drawBack()
-        drawLabel("Game of Life Rules", app.width // 2, 30, size=30)
+        drawLabel("Game of Life Rules", app.width // 2, 30, size=30, align="center")
+
+        # Draw the upper grids
+        self.drawGrid(app, app.width // 2 - 150, app.height // 2 - 200, 3, 3, 20)
+        self.drawGrid(app, app.width // 2 + 100, app.height // 2 - 200, 3, 3, 20)
+
+        # Dead to Alive
+        # Right
         drawLabel(
-            "Each cell can be alive or dead. ",
+            "Center Cell is dead",
+            app.width // 2 - 120,
+            app.height // 2 - 210,
+            size=20,
+        )
+        drawRect(app.width // 2 - 130, app.height // 2 - 200, 20, 20)
+        drawRect(app.width // 2 - 130, app.height // 2 - 160, 20, 20)
+        drawRect(app.width // 2 - 110, app.height // 2 - 180, 20, 20)
+        drawRect(app.width // 2 - 130, app.height // 2 - 180, 20, 20, fill="red")
+
+        # Left
+        drawLabel(
+            "Alive",
+            app.width // 2 + 130,
+            app.height // 2 - 210,
+            size=20,
+        )
+        drawRect(app.width // 2 + 120, app.height // 2 - 200, 20, 20)
+        drawRect(app.width // 2 + 120, app.height // 2 - 160, 20, 20)
+        drawRect(app.width // 2 + 140, app.height // 2 - 180, 20, 20)
+        drawRect(app.width // 2 + 120, app.height // 2 - 180, 20, 20, fill="green")
+
+        # Draw the lower grids
+        self.drawGrid(app, app.width // 2 - 150, app.height // 2 - 100, 3, 3, 20)
+        self.drawGrid(app, app.width // 2 + 100, app.height // 2 - 100, 3, 3, 20)
+
+        # Alive to dead
+        # Right
+        drawLabel(
+            "Alive",
+            app.width // 2 - 120,
+            app.height // 2 - 110,
+            size=20,
+        )
+        drawRect(app.width // 2 - 150, app.height // 2 - 100, 20, 20)
+        drawRect(app.width // 2 - 110, app.height // 2 - 100, 20, 20)
+        drawRect(app.width // 2 - 150, app.height // 2 - 60, 20, 20)
+        drawRect(app.width // 2 - 110, app.height // 2 - 60, 20, 20)
+        drawRect(app.width // 2 - 130, app.height // 2 - 80, 20, 20, fill="green")
+
+        # Left
+        drawLabel(
+            "Dead",
+            app.width // 2 + 130,
+            app.height // 2 - 110,
+            size=20,
+        )
+        drawRect(app.width // 2 + 100, app.height // 2 - 100, 20, 20)
+        drawRect(app.width // 2 + 140, app.height // 2 - 100, 20, 20)
+        drawRect(app.width // 2 + 100, app.height // 2 - 60, 20, 20)
+        drawRect(app.width // 2 + 140, app.height // 2 - 60, 20, 20)
+        drawRect(app.width // 2 + 120, app.height // 2 - 80, 20, 20, fill="red")
+
+        # Draw arrows
+        self.drawArrow(
+            app,
+            app.width // 2 - 50,
+            app.height // 2 - 170,
+            app.width // 2 + 50,
+            app.height // 2 - 170,
+        )
+        self.drawArrow(
+            app,
+            app.width // 2 - 50,
+            app.height // 2 - 70,
+            app.width // 2 + 50,
+            app.height // 2 - 70,
+        )
+
+        # Draw the explanatory text
+        drawLabel(
+            "Each cell can be alive or dead.",
             app.width // 2,
-            app.height // 2 - 30,
+            app.height // 2 + 40,
             size=18,
         )
         drawLabel(
-            "A live cell survives to the next generation if it has 2 or 3 neighbors. ",
+            "A live cell survives to the next generation if it has 2 or 3 neighbors.",
             app.width // 2,
-            app.height // 2,
+            app.height // 2 + 70,
             size=18,
         )
         drawLabel(
             "A dead cell becomes alive if it has exactly 3 neighbors.",
             app.width // 2,
-            app.height // 2 + 30,
+            app.height // 2 + 100,
             size=18,
+        )
+
+    def drawArrow(self, app, startX, startY, endX, endY):
+        drawLine(startX, startY, endX, endY, fill="black", width=2)
+        arrowSize = 10
+
+        # Define the points for the arrowhead triangle (always left to right)
+        arrowPoint1 = (endX, endY)  # Tip of the arrow
+        arrowPoint2 = (endX - arrowSize, endY - arrowSize / 2)  # Top corner
+        arrowPoint3 = (endX - arrowSize, endY + arrowSize / 2)  # Bottom corner
+
+        drawPolygon(
+            arrowPoint1[0],
+            arrowPoint1[1],
+            arrowPoint2[0],
+            arrowPoint2[1],
+            arrowPoint3[0],
+            arrowPoint3[1],
+            fill="black",
+        )
+
+    def drawGrid(self, app, startX, startY, rows, cols, cellSize):
+        for row in range(rows):
+            for col in range(cols):
+                x = startX + col * cellSize
+                y = startY + row * cellSize
+                drawRect(
+                    x,
+                    y,
+                    cellSize,
+                    cellSize,
+                    fill="lightGray",
+                    border="black",
+                    borderWidth=1,
+                )
+
+    def drawArrow(self, app, startX, startY, endX, endY):
+        drawLine(startX, startY, endX, endY, fill="black")
+        arrowSize = 5
+        drawPolygon(
+            endX,
+            endY,
+            endX - arrowSize,
+            endY - arrowSize,
+            endX - arrowSize,
+            endY + arrowSize,
+            fill="black",
         )
 
     def drawPlayerIntroduction(self, app):
@@ -92,7 +217,7 @@ class Tutorial:
         self.drawBack()
         drawLabel("Player Introduction", app.width // 2, 30, size=30)
         drawLabel(
-            "This is your player represented as a green square.",
+            "Your player is represented as a green square.",
             app.width // 2,
             100,
             size=18,
@@ -103,17 +228,47 @@ class Tutorial:
             140,
             size=18,
         )
-
-        drawLabel(
-            "Your objective is to touch the yellow-bordered cells.",
-            app.width // 2,
-            180,
-            size=18,
-        )
-        self.drawPlayer(app)
-
-    def drawPlayer(self, app):
         drawRect(app.width // 2 - 20, app.height // 2 - 20, 40, 40, fill="green")
+        drawRect(
+            app.width // 2 - 80,
+            app.height // 2 - 80,
+            40,
+            40,
+            fill="white",
+            border="black",
+        )
+        drawRect(
+            app.width // 2 - 140,
+            app.height // 2 - 100,
+            40,
+            40,
+            fill="white",
+            border="black",
+        )
+        drawRect(
+            app.width // 2 - 60,
+            app.height // 2 + 40,
+            40,
+            40,
+            fill="white",
+            border="black",
+        )
+        drawRect(
+            app.width // 2 + 20,
+            app.height // 2 + 80,
+            40,
+            40,
+            fill="white",
+            border="black",
+        )
+        drawRect(
+            app.width // 2 + 80,
+            app.height // 2 - 20,
+            40,
+            40,
+            fill="white",
+            border="black",
+        )
 
     def drawPlayerObjective(self, app):
         drawRect(0, 0, app.width, app.height, fill="lightGray")
@@ -131,10 +286,37 @@ class Tutorial:
             140,
             size=18,
         )
-        drawLabel(f"Time left: {self.timeLimit}", app.width // 2, 180, size=18)
+        drawLabel(
+            f"Time left: {self.timeLimit}", app.width // 2, 180, size=18, fill="red"
+        )
+        drawRect(app.width // 2 - 20, app.height // 2 - 20, 40, 40, fill="green")
         drawRect(
-            app.width // 2 - 20,
+            app.width // 2 - 80,
+            app.height // 2 + 20,
+            40,
+            40,
+            fill=None,
+            border="yellow",
+        )
+        drawRect(
+            app.width // 2 - 100,
+            app.height // 2 - 80,
+            40,
+            40,
+            fill=None,
+            border="yellow",
+        )
+        drawRect(
+            app.width // 2 + 140,
             app.height // 2 - 20,
+            40,
+            40,
+            fill=None,
+            border="yellow",
+        )
+        drawRect(
+            app.width // 2 - 120,
+            app.height // 2 + 140,
             40,
             40,
             fill=None,
@@ -146,7 +328,7 @@ class Tutorial:
         self.drawBack()
         drawLabel("Settings", app.width // 2, 30, size=30)
         drawLabel(
-            "You can adjust the following settings:", app.width // 2, 100, size=18
+            "You can explore the following settings:", app.width // 2, 100, size=18
         )
         drawLabel(f"Difficulty: {self.difficulty}", app.width // 2, 150, size=18)
         drawLabel(
