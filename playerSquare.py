@@ -63,16 +63,16 @@ def moveGreenSquare(app, newX, newY):
         app.newGreenSquareY = newY
         app.animation = True
 
-        # Check if the player is at the border
-        if (
-            newX >= gridLimitX - 1
-            or newX <= -gridLimitX + 1
-            or newY >= gridLimitY - 1
-            or newY <= -gridLimitY + 1
-        ):
-            app.borderReached = True
-        else:
-            app.borderReached = False
+    # Check if the player is at the border
+    if (
+        newX >= gridLimitX - 1
+        or newX <= -gridLimitX + 1
+        or newY >= gridLimitY - 1
+        or newY <= -gridLimitY + 1
+    ):
+        app.borderReached = True
+    else:
+        app.borderReached = False
 
 
 # "Update" the camera by shifting the grid opposite to the player's movement
