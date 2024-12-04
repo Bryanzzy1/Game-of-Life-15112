@@ -228,6 +228,12 @@ class Tutorial:
             140,
             size=18,
         )
+        drawLabel(
+            "Control with 'WASD' or the arrow keys",
+            app.width // 2,
+            180,
+            size=18,
+        )
         drawRect(app.width // 2 - 20, app.height // 2 - 20, 40, 40, fill="green")
         drawRect(
             app.width // 2 - 80,
