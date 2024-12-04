@@ -17,7 +17,7 @@ class StartScreen:
         imUrl = "https://miro.medium.com/v2/1*lI0IaLqlpXjh96Z-_RX9Dw.gif"
         drawImage(imUrl, 0, 0, width=app.width, height=app.height)
         drawLabel(
-            "The Game of LIFE",
+            "Survive: Game of LIFE",
             app.width // 2,
             app.height // 4,
             size=40,
