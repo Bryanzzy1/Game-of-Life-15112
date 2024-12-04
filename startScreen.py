@@ -14,13 +14,15 @@ class StartScreen:
 
     # Draws the initial start menu with options to begin the game or go to settings
     def drawStartScreen(self, app):
+        imUrl = "https://miro.medium.com/v2/1*lI0IaLqlpXjh96Z-_RX9Dw.gif"
+        drawImage(imUrl, 0, 0, width=app.width, height=app.height)
         drawLabel(
             "The Game of LIFE",
             app.width // 2,
             app.height // 4,
             size=40,
             bold=True,
-            fill="Black",
+            fill="green",
         )
 
         # Begin Button
@@ -268,6 +270,12 @@ class StartScreen:
             "4. Press the Right and Left arrow button to go through the slides",
             app.width // 2,
             280,
+            size=18,
+        )
+        drawLabel(
+            "5. Do NOT expand or full screen, the game will be very laggy",
+            app.width // 2,
+            320,
             size=18,
         )
 
